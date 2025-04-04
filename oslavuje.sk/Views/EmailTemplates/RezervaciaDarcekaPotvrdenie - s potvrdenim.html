@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>{EMAIL_SUBJ}</title>
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+    <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <h1 style="color: #007bff;">Potvrdenie rezervácie darčeka</h1>
+        </div>
+
+        <p>Dobrý deň {EMAIL_NAME},</p>
+
+        <p>ďakujeme za vašu rezerváciu darčeka. Pre potvrdenie rezervácie kliknite na nasledujúci odkaz:</p>
+
+        <p style="text-align: center; margin: 30px 0;">
+            <a href="{CONFIRMATION_LINK}" style="background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Potvrdiť rezerváciu</a>
+        </p>
+
+        <p>Ak ste darček nerezervovali vy, môžete túto správu ignorovať.</p>
+
+        <p>S pozdravom,<br />Tím oslavuje.sk</p>
+
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #777;">
+            <p>Táto správa bola odoslaná na adresu {EMAIL_TO}.</p>
+        </div>
+    </div>
+</body>
+</html>

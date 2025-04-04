@@ -1,0 +1,178 @@
+﻿<!-- Views/Shared/Components/GiftRegistryManager/Default.cshtml -->
+@model oslavuje.sk.Models.ViewModels.GiftRegistry.GiftRegistryViewModel
+
+<div class="gift-registry-form">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <form asp-controller="GiftRegistrySurface"
+          asp-action="@(Model.IsExistingRegistry ? "UpdateGiftRegistry" : "CreateGiftRegistry")"
+          method="post">
+        @Html.AntiForgeryToken()
+
+        @if (Model.RegistryId.HasValue)
+        {
+            <input type="hidden" asp-for="RegistryId" />
+        }
+
+        <div class="mb-3">
+            <label asp-for="SubdomainName" class="form-label"></label>
+            <div class="input-group">
+                @if (Model.IsExistingRegistry)
+                {
+                    <input asp-for="SubdomainName" class="form-control" readonly />
+                }
+                else
+                {
+                    <input asp-for="SubdomainName" class="form-control" />
+                }
+                <span class="input-group-text">.oslavuje.sk</span>
+            </div>
+            <span asp-validation-for="SubdomainName" class="text-danger"></span>
+            <div class="form-text">Subdoména musí obsahovať len malé písmená, číslice a pomlčky.</div>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Title" class="form-label"></label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Description" class="form-label"></label>
+            <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        @* <div class="mb-3">
+            <label asp-for="ExpiryDate" class="form-label"></label>
+            <input asp-for="ExpiryDate" type="date" class="form-control" value="@(Model.ExpiryDate?.ToString("yyyy-MM-dd"))" />
+            <span asp-validation-for="ExpiryDate" class="text-danger"></span>
+        </div> *@
+
+        <button type="submit" class="btn btn-primary mb-3">
+            @(Model.IsExistingRegistry ? "Aktualizovať register darčekov" : "Vytvoriť register darčekov")
+        </button>
+
+        @if (Model.IsExistingRegistry)
+        {
+            <a href="@Url.Action("DeleteGiftRegistry", "GiftRegistrySurface", new { id = Model.RegistryId })"
+               class="btn btn-danger mb-3"
+               onclick="return confirm('Naozaj chcete zmazať tento register darčekov?');">
+                Zmazať register darčekov
+            </a>
+        }
+    </form>
+
+    @if (Model.IsExistingRegistry)
+    {
+        <div class="mt-4">
+            <h3>Zoznam darčekov</h3>
+
+            @if (Model.Gifts.Any())
+            {
+                <div class="mb-4">
+                    @foreach (var gift in Model.Gifts)
+                    {
+                        <div class="gift-item mb-3 p-3 border rounded">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h5>@gift.Name</h5>
+                                    @if (!string.IsNullOrEmpty(gift.Description))
+                                    {
+                                        <p>@gift.Description</p>
+                                    }
+                                    @if (gift.Price.HasValue)
+                                    {
+                                        <p><strong>Cena:</strong> @gift.Price.Value.ToString("C")</p>
+                                    }
+                                    @if (!string.IsNullOrEmpty(gift.ImageUrl))
+                                    {
+                                        <p><strong>Námet:</strong> <a href="@gift.ImageUrl" target="_blank">Zobraziť</a></p>
+                                    }
+
+                                    @if (gift.IsReserved)
+                                    {
+                                        <div class="alert alert-info mt-2">
+                                            <strong>Tento darček je rezervovaný.</strong>
+                                            @if (!string.IsNullOrEmpty(gift.ReservedByName))
+                                            {
+                                                <div>Darček si rezervoval/a: @gift.ReservedByName</div>
+                                            }
+                                            @if (!string.IsNullOrEmpty(gift.ReservedByEmail))
+                                            {
+                                                <div>Kontaktný email: @gift.ReservedByEmail</div>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+
+                                @if (!gift.IsReserved)
+                                {
+                                    <a href="@Url.Action("DeleteGift", "GiftRegistrySurface", new { id = gift.Id })"
+                                       class="btn btn-sm btn-danger"
+                                       onclick="return confirm('Naozaj chcete odstrániť tento darček?');">
+                                        <i class="fas fa-trash"></i> Odstrániť
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p>Zatiaľ nemáte pridané žiadne darčeky.</p>
+            }
+
+            <!-- Form na pridanie nového darčeka -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>Pridať nový darček</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-controller="GiftRegistrySurface" asp-action="AddGift" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <div class="mb-3">
+                            <label asp-for="NewGift.Name" class="form-label">Názov darčeka</label>
+                            <input asp-for="NewGift.Name" class="form-control" required />
+                            <span asp-validation-for="NewGift.Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="NewGift.Description" class="form-label">Popis</label>
+                            <textarea asp-for="NewGift.Description" class="form-control" rows="2"></textarea>
+                            <span asp-validation-for="NewGift.Description" class="text-danger"></span>
+                        </div>
+
+                        @* <div class="mb-3">
+                            <label asp-for="NewGift.Price" class="form-label">Cena</label>
+                            <input asp-for="NewGift.Price" type="number" step="0.01" class="form-control" />
+                            <span asp-validation-for="NewGift.Price" class="text-danger"></span>
+                        </div> *@
+
+                        <div class="mb-3">
+                            <label asp-for="NewGift.ImageUrl" class="form-label">URL obrázka</label>
+                            <input asp-for="NewGift.ImageUrl" type="url" class="form-control" />
+                            <span asp-validation-for="NewGift.ImageUrl" class="text-danger"></span>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Pridať darček</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+</div>

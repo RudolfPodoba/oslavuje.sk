@@ -1,0 +1,23 @@
+﻿@inherits UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockGridItem<ContentModels.ImageWithCaption>>
+@using Umbraco.Community.BlockPreview.Extensions
+
+@if (Model?.Content?.Image == null) return;
+
+<section class="page-section bg-white text-white mb-0">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                @if (Context.Request.IsBlockPreviewRequest())
+                {
+                    @* Aby zobrazenie v backoffice nebolo rozmazané, ak namiesto vytvoreného pluginu "image.html" používaš default plugin "block-preview.html". *@
+                    <img class="img-fluid" src="@Model.Content.Image.GetCropUrl(800, 580)" alt="@Model.Content.Image.GetAltText()" width="800" height="580" />
+                }
+                else
+                {
+                    <img class="img-fluid lazyload" data-srcset="@Url.GetSrcSetUrls(Model.Content.Image, 800, 580)" src="@Model.Content.Image.GetCropUrl(80, 58, quality: 40)" alt="@Model.Content.Image.GetAltText()" width="800" height="580" sizes="auto" />
+                }
+                <p class="text-dark text-center fst-italic">@Model.Content.Caption</p>
+            </div>
+        </div>
+    </div>
+</section>

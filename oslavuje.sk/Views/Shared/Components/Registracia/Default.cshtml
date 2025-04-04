@@ -1,0 +1,132 @@
+﻿@model oslavuje.sk.Models.ViewModels.RegistraciaViewModel
+@using System.Text.Json
+@using oslavuje.sk.Models.ViewModels
+
+@{
+    // Deserializácia validačných chýb
+    Dictionary<string, string>? validationErrors = null;
+    if (TempData["ValidationErrors"] is string validationJson && !string.IsNullOrEmpty(validationJson))
+    {
+        try
+        {
+            validationErrors = JsonSerializer.Deserialize<Dictionary<string, string>>(
+                validationJson,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        }
+        catch (JsonException) { /* Ignorujeme chyby deserializácie */ }
+    }
+
+    // Získanie hodnôt z TempData (ak existujú) alebo z modelu
+    var name = Model?.Name ?? "";
+    var email = Model?.Email ?? "";
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Registrácia</h3>
+                </div>
+                <div class="card-body">
+                    @if (TempData["ErrorMessage"] is string errorMessage)
+                    {
+                        <div class="alert alert-danger">
+                            @errorMessage
+                        </div>
+                    }
+
+                    @using (Html.BeginForm("Registracia", "MemberSurface", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.Name, new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.Name, new { @class = "form-control", Value = name })
+                            @if (validationErrors != null && validationErrors.TryGetValue("Name", out var nameError))
+                            {
+                                <span class="text-danger">@nameError</span>
+                            }
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.Email, new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", Value = email })
+                            @if (validationErrors != null && validationErrors.TryGetValue("Email", out var emailError))
+                            {
+                                <span class="text-danger">@emailError</span>
+                            }
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.Password, new { @class = "form-label" })
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                            @if (validationErrors != null && validationErrors.TryGetValue("Password", out var passwordError))
+                            {
+                                <span class="text-danger">@passwordError</span>
+                            }
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.ConfirmPassword, new { @class = "form-label" })
+                            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+                            @if (validationErrors != null && validationErrors.TryGetValue("ConfirmPassword", out var confirmError))
+                            {
+                                <span class="text-danger">@confirmError</span>
+                            }
+                        </div>
+
+                        <!-- Veď ty vieš na čo to je - DVB 09 02-->
+                        <div class="api-password-group">
+                            @Html.TextBoxFor(m => m.MojeHeslo, new { @class = "form-control masked-input", autocomplete = "off" })
+                            @Html.LabelFor(m => m.MojeHeslo, new { @class = "form-label" })
+                            @if (validationErrors != null && validationErrors.TryGetValue("MojeHeslo", out var mojeHesloError))
+                            {
+                                <span class="text-danger">@mojeHesloError</span>
+                            }
+                        </div>
+
+                        <div class="api-password-group">
+                            @Html.TextBoxFor(m => m.PotvrdMojeHeslo, new { @class = "form-control masked-input", autocomplete = "off" })
+                            @Html.LabelFor(m => m.PotvrdMojeHeslo, new { @class = "form-label" })
+                            @if (validationErrors != null && validationErrors.TryGetValue("PotvrdMojeHeslo", out var potvrdMojeHesloError))
+                            {
+                                <span class="text-danger">@potvrdMojeHesloError</span>
+                            }
+                        </div>
+
+                        <div class="form-check form-check-info text-left mb-3">
+                            @Html.CheckBoxFor(m => m.Consent, new { @class = "form-check-input" })
+                            <label class="form-check-label" for="Consent">
+                                Súhlasím s <a href="/Home/Osobne_udaje/" class="text-dark font-weight-bolder">Zásady ochrany osobných údajov</a>
+                            </label>
+                            @if (validationErrors != null && validationErrors.TryGetValue("Consent", out var consentError))
+                            {
+                                <span class="text-danger">@consentError</span>
+                            }
+                        </div>
+
+                        <div class="form-check form-check-info text-left mb-3">
+                            @Html.CheckBoxFor(m => m.ConsentServices, new { @class = "form-check-input" })
+                            <label class="form-check-label" for="ConsentServices">
+                                Súhlasím s <a href="/Home/Podmienky_pouzivania/" class="text-dark font-weight-bolder">Podmienkami využívania služieb serveru oslavuje.sk</a>
+                            </label>
+                            @if (validationErrors != null && validationErrors.TryGetValue("ConsentServices", out var consentServicesError))
+                            {
+                                <span class="text-danger">@consentServicesError</span>
+                            }
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">Registrovať</button>
+                        </div>
+                    }
+                </div>
+                <div class="card-footer text-center">
+                    Už máte účet? <a href="/Home/Prihlasenie">Prihláste sa</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

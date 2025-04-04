@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Oslavuje.sk Version Configuration",
+  "description": "Schéma pre konfiguráciu verzií aplikácie Oslavuje.sk",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Odkaz na schému JSON"
+    },
+    "Version": {
+      "type": "string",
+      "description": "Sémantická verzia aplikácie",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "BuildNumber": {
+      "type": "integer",
+      "description": "Aktuálne číslo buildu",
+      "minimum": 0
+    },
+    "ReleaseDate": {
+      "type": "string",
+      "description": "Dátum vydania verzie",
+      "format": "date"
+    },
+    "ReleaseNotes": {
+      "type": "array",
+      "description": "Poznámky k vydaniu pre aktuálnu verziu",
+      "items": {
+        "type": "string"
+      }
+    },
+    "Changelog": {
+      "type": "array",
+      "description": "História všetkých verzií",
+      "items": {
+        "type": "object",
+        "properties": {
+          "Version": {
+            "type": "string",
+            "description": "Sémantická verzia",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$"
+          },
+          "BuildNumber": {
+            "type": "integer",
+            "description": "Číslo buildu pre túto verziu",
+            "minimum": 0
+          },
+          "ReleaseDate": {
+            "type": "string",
+            "description": "Dátum vydania verzie",
+            "format": "date"
+          },
+          "Changes": {
+            "type": "array",
+            "description": "Zoznam zmien v tejto verzii",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [ "Version", "ReleaseDate", "Changes" ]
+      }
+    }
+  },
+  "required": [ "Version", "BuildNumber" ]
+}

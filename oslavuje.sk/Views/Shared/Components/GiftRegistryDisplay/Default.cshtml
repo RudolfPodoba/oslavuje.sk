@@ -1,0 +1,250 @@
+﻿@model oslavuje.sk.Models.ViewModels.GiftRegistry.GiftRegistryDisplayViewModel
+
+<div class="gift-registry-display">
+    @if (Model.Registry != null)
+    {
+        <div class="registry-info mb-4">
+            
+            @if (!string.IsNullOrEmpty(@Model.Registry.Title))
+            {
+                <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">
+                    @Model.Registry.Title
+                </h2>
+            }
+            else
+            {
+                <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">
+                    Darčekový register
+                </h2>
+            }
+                
+            <!-- Icon Divider-->
+            <div class="divider-custom">
+                <div class="divider-custom-line"></div>
+                <div class="divider-custom-icon"><svg style="width: 1.2em; height: 1.2em;" class="svg-inline--fa fa-star" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="star" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" data-fa-i2svg=""><path fill="currentColor" d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z"></path></svg></div>
+                <div class="divider-custom-line"></div>
+            </div>
+            @if (!string.IsNullOrEmpty(Model.Registry.Description))
+            {
+                <div class="registry-description mb-3">
+                    @Model.Registry.Description
+                </div>
+                <!-- Icon Divider-->
+                <div class="divider-custom">
+                    <div class="divider-custom-line"></div>
+                    <div class="divider-custom-icon"><svg style="width: 1.2em; height: 1.2em;" class="svg-inline--fa fa-star" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="star" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" data-fa-i2svg=""><path fill="currentColor" d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z"></path></svg></div>
+                    <div class="divider-custom-line"></div>
+                </div>
+            }
+        </div>
+    }
+    
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    @if (!Model.Gifts.Any())
+    {
+        <div class="alert alert-info">
+            Všetky darčeky boli už rezervované.
+        </div>
+    }
+    else
+    {
+        <form asp-controller="GiftRegistrySurface" asp-action="ReserveGift" method="post">
+            <input asp-antiforgery="true" type="hidden" />
+            <input type="hidden" name="RegistryId" value="@Model.Registry!.Id" />
+            <input type="hidden" name="RegistryTitle" value="@Model.Registry.Title" />
+            <input type="hidden" name="RegistryDescription" value="@Model.Registry.Description" />
+
+            <!-- Veď ty vieš na čo to je - DVB 09 02-->
+            <div class="api-password-group">
+                <input name="MojeHeslo" class="form-control masked-input" id="MojeHeslo" type="text" autocomplete="off" />
+                <label for="MojeHeslo">Heslo</label>
+                <span class="text-danger"></span>
+            </div>
+            <div class="api-password-group">
+                <input name="PotvrdMojeHeslo" class="form-control masked-input" id="PotvrdMojeHeslo" type="text" autocomplete="off" />
+                <label for="PotvrdMojeHeslo">Potvrdenie hesla</label>
+                <span class="text-danger"></span>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-7">
+                    <div class="gift-list">
+                        <!-- Pevná možnosť "Bez darčeka" -->
+                        <div class="gift-item card mb-3">
+                            <div class="card-body">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="GiftId"
+                                           id="gift-no-gift" value="0" required>
+                                    <label class="form-check-label" for="gift-no-gift">
+                                        <h5 class="mb-0">Bez darčeka</h5>
+                                    </label>
+                                </div>
+                                <div class="gift-details ms-4 mt-2">
+                                    <p class="mb-1">Potvrdím svoju účasť, ale z týchto darčekov nedonesiem nič 😜</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h4>Vytúžené darčeky:</h4>
+
+                        @foreach (var gift in Model.Gifts)
+                        {
+                            <div class="gift-item card mb-3">
+                                <div class="card-body">
+                                    <div class="form-check">
+                                        <input class="form-check-input gift-radio" type="radio"
+                                               name="GiftId" id="gift-@gift.Id"
+                                               value="@gift.Id" required
+                                               data-name="@gift.Name"
+                                               data-description="@(gift.Description ?? "")">
+                                        <label class="form-check-label" for="gift-@gift.Id">
+                                            <h5 class="mb-0">@gift.Name</h5>
+                                        </label>
+                                    </div>
+                                    <!-- Pridajte skryté polia pre meno a popis -->
+                                    <input type="hidden" name="GiftName" value="" id="selected-gift-name" />
+                                    <input type="hidden" name="GiftDescription" value="" id="selected-gift-description" />
+
+
+                                    <div class="gift-details ms-4 mt-2">
+                                        @if (!string.IsNullOrEmpty(gift.Description))
+                                        {
+                                            <p class="mb-1">@gift.Description</p>
+                                        }
+                                        @if (gift.Price.HasValue)
+                                        {
+                                            <p class="mb-1">Približná cena: @gift.Price.Value.ToString("C")</p>
+                                        }
+                                        @if (!string.IsNullOrEmpty(gift.ImageUrl))
+                                        {
+                                            <div class="gift-image mt-2 mb-2">
+                                                @* <img src="@gift.ImageUrl" alt="@gift.Name" class="img-thumbnail" style="max-height: 150px;"> *@
+                                                <p><strong>Námet: </strong> <a href="@gift.ImageUrl" target="_blank">Zobraziť</a></p>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        
+                    </div>
+                </div>
+
+                <div class="col-md-5">
+                    <div class="reservation-form card sticky-top" style="top: 20px;">
+                        <div class="card-header">
+                            <h4>Potvrdenie účasti</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="nameInput" class="form-label">Vaše meno</label>
+                                <input type="text" class="form-control" id="nameInput" name="Name" required />
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="emailInput" class="form-label">Váš email</label>
+                                <input type="email" class="form-control" id="emailInput" name="Email" required />
+                                <div class="form-text">Na tento email vám zašleme potvrdenie.</div>
+                            </div>
+
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="consentCheck" name="Consent" value="true" required />
+                                <input type="hidden" name="Consent" value="false" />
+                                <label class="form-check-label" for="consentCheck">
+                                    Súhlasím so <a href="/Home/Osobne_udaje/" class="text-dark font-weight-bolder">Zásadami ochrany osobných údajov</a>
+                                </label>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Potvrdiť účasť</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    }
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const giftRadios = document.querySelectorAll('.gift-radio');
+        const nameField = document.getElementById('selected-gift-name');
+        const descriptionField = document.getElementById('selected-gift-description');
+
+        giftRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.checked) {
+                    nameField.value = this.dataset.name;
+                    descriptionField.value = this.dataset.description;
+                }
+            });
+        });
+
+        // Získa parameter subdomain z URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const subdomain = urlParams.get('subdomain');
+
+        if (subdomain) {
+            // Namiesto zmeny URL pridáme informáciu o subdoméne do stránky
+            const registryInfo = document.querySelector('.registry-info');
+            if (registryInfo) {
+                const subdomainInfo = document.createElement('div');
+                subdomainInfo.className = 'alert alert-info mt-3';
+                subdomainInfo.innerHTML = `Prezeráte si zoznam darčekov pre adresu: <strong>${subdomain}.oslavuje.sk</strong>`;
+                registryInfo.appendChild(subdomainInfo);
+            }
+
+            // Ak potrebujete, môžete zmeniť aj titulok stránky
+            document.title = `${subdomain} - ${document.title}`;
+        }
+    });
+</script>
+
+</div>
+
+<style>
+    .gift-list {
+        max-height: 85vh;
+        overflow-y: auto;
+        padding-right: 10px;
+    }
+
+    .gift-item:hover {
+        box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    }
+
+    .form-check-input:checked + .form-check-label h5 {
+        font-weight: bold;
+        color: #0d6efd;
+    }
+
+    .gift-item .form-check-label {
+        cursor: pointer;
+        width: 100%;
+    }
+
+    /* Pre lepšiu viditeľnosť aktívneho výberu */
+    .gift-item:has(.form-check-input:checked) {
+        border-color: #0d6efd;
+        background-color: #f0f7ff;
+    }
+
+    /* Štýl pre popis registra */
+    .registry-description {
+        white-space: pre-line;
+        font-size: 1.1rem;
+        line-height: 1.5;
+        color: #555;
+    }
+</style>

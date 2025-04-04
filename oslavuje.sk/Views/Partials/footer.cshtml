@@ -1,0 +1,23 @@
+﻿@inherits UmbracoViewPage
+@using oslavuje.sk.Configuration;
+
+@{
+    var siteSettings = Model.GetSiteSettings();
+    if (siteSettings?.FooterContent is null) return;
+}
+
+<footer class="footer text-center">
+    <div class="container">
+        <div class="row">
+            @await Html.GetBlockGridItemsHtmlAsync(siteSettings.FooterContent)            
+        </div>
+    </div>
+</footer>
+<!-- Copyright Section-->
+<div class="copyright py-4 text-center text-white">
+    <div class="container">
+        <small>&copy; @Umbraco.GetDictionaryValueOrDefault("CopyrightStatement", "Copyright Rudolf Podoba") @DateTime.Now.Year</small>
+        <br/>
+        <small class="ms-2">@VersionInfo.GetVersion()</small>
+    </div>
+</div>

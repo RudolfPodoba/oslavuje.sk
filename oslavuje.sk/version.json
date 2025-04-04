@@ -1,0 +1,29 @@
+﻿{
+    "$schema":  "./.schema/version.schema.json",
+    "Version":  "1.0.2",
+    "BuildNumber":  447,
+    "ReleaseDate":  "2025-04-02",
+    "ReleaseNotes":  [
+                         "..."
+                     ],
+    "Changelog":  [
+                      {
+                          "Version":  "1.0.1",
+                          "BuildNumber":  446,
+                          "ReleaseDate":  "2025-04-02",
+                          "Changes":  [
+                                          "Pridané kontrola na existeciu/duplicitu subdomén",
+                                          "Pridané sledovanie Google Analytics",
+                                          "Pridaná evidencia noviniek pre jednotlivé verzie"
+                                      ]
+                      },
+                      {
+                          "Version":  "1.0.0",
+                          "BuildNumber":  429,
+                          "ReleaseDate":  "2025-04-01",
+                          "Changes":  [
+                                          "Prvé nasadenie"
+                                      ]
+                      }
+                  ]
+}

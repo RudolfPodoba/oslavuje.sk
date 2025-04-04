@@ -1,0 +1,15 @@
+﻿@inherits UmbracoViewPage<ISEoproperties>
+
+@if (Model == null) return;
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta name="description" content="@Model.MetaDescription" />
+<meta name="language" content="sk" />
+<meta name="content-language" content="sk" />
+<meta name="author" content="Rudolf Podoba" />
+<meta name="robots" content="@(Model.IsFollowable ? "FOLLOW," : "NOFOLLOW,")@(Model.IsIndexable ? "INDEX" : "NOINDEX")" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>@Umbraco.AssignedContentItem.GetMetaTitleOrName(Model.MetaTitle) | @(Umbraco.AssignedContentItem.GetSiteName())</title>
+@* <link rel="icon" type="image/png" sizes="16x16" href="assets/icons8-partying-face-3d-fluency-16.png" /> *@
+<link rel="icon" type="image/png" sizes="16x16" href="assets/party-popper.svg" />

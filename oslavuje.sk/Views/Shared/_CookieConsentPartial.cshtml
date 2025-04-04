@@ -1,0 +1,72 @@
+﻿@using Microsoft.AspNetCore.Http.Features
+
+@{
+    var consentFeature = Context.Features.Get<ITrackingConsentFeature>();
+    var showBanner = !consentFeature?.CanTrack ?? false;
+    var cookieString = consentFeature?.CreateConsentCookie();
+    var hasConsent = consentFeature?.CanTrack ?? false;
+}
+
+@if (showBanner)
+{
+    <div id="cookieConsent" class="alert alert-info alert-dismissible fade show fixed-bottom m-3" role="alert">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9">
+                    <p>
+                        Táto stránka používa cookies na prihlásenie, registráciu a zlepšenie používateľského zážitku.
+                        Nevyhnutné cookies sú potrebné pre fungovanie stránky.
+                    </p>
+                </div>
+                <div class="col-md-3 text-end">
+                    <button type="button" class="btn btn-primary accept-button" data-cookie-string="@cookieString">
+                        Prijať všetky
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#cookieSettingsModal">
+                        Nastavenia
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Toto sa zobrazí vždy, aj keď bol už súhlas udelený -->
+<div class="modal fade" id="cookieSettingsModal" tabindex="-1" aria-labelledby="cookieSettingsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cookieSettingsModalLabel">Nastavenia cookies</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="necessaryCookies" checked disabled>
+                    <label class="form-check-label" for="necessaryCookies">
+                        <strong>Nevyhnutné cookies</strong> - potrebné pre fungovanie stránky, prihlásiť sa a používať základné funkcie
+                    </label>
+                </div>
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="analyticsCookies">
+                    <label class="form-check-label" for="analyticsCookies">
+                        <strong>Analytické cookies</strong> - pomáhajú nám pochopiť, ako používate našu stránku
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary save-preferences-button" data-cookie-string="@cookieString">Uložiť nastavenia</button>
+                @if (hasConsent)
+                {
+                    <button type="button" class="btn btn-outline-danger reset-consent-button">Zrušiť súhlas</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tlačidlo pre správu cookies v pätičke stránky -->
+<div class="cookie-settings-button-container" style="position: fixed; bottom: 20px; left: 20px; z-index: 1040;">
+    <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#cookieSettingsModal" title="Nastavenia cookies">
+        <i class="fas fa-cookie-bite"></i> Cookies
+    </button>
+</div>

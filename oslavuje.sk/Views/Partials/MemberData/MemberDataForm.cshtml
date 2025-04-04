@@ -1,0 +1,53 @@
+﻿@model oslavuje.sk.Models.ViewModels.MemberDataViewModel
+@using Umbraco.Extensions
+
+<div class="member-data-container">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <div class="member-data-form">
+        <h3>Zadajte vaše údaje</h3>
+
+        <form action="@Url.Action("Save", "MemberDataSurface")" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                <label asp-for="UserInput">@Html.DisplayNameFor(m => m.UserInput)</label>
+                <textarea asp-for="UserInput" class="form-control" rows="4"></textarea>
+                <span asp-validation-for="UserInput" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-3">Uložiť</button>
+        </form>
+    </div>
+
+    @if (Model.PreviousData.Any())
+    {
+        <div class="member-previous-data mt-5">
+            <h3>Vaše predchádzajúce údaje</h3>
+
+            <div class="list-group">
+                @foreach (var item in Model.PreviousData)
+                {
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <p class="mb-1">@item.UserInput</p>
+                            <small>@item.DateCreated.ToString("dd.MM.yyyy HH:mm")</small>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>

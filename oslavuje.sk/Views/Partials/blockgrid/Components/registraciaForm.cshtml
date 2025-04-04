@@ -1,0 +1,13 @@
+﻿@inherits UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockGridItem<ContentModels.RegistraciaForm>>
+
+<!-- Registrácia Section-->
+<section class="page-section" id="registracia">
+    <div class="container">        
+        <!-- Registrácia Form-->
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-xl-7">
+                @await Component.InvokeAsync("Registracia")
+            </div>
+        </div>
+    </div>
+</section>

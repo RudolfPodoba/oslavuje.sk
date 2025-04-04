@@ -1,0 +1,22 @@
+﻿@using Umbraco.Cms.Core.Models.Blocks
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<IEnumerable<BlockGridItem>>
+@{
+    if (Model?.Any() != true) { return; }
+}
+
+@foreach (var item in Model)
+{
+    var partialViewName = "blockgrid/Components/" + item.Content.ContentType.Alias;
+    try
+    {
+        @await Html.PartialAsync(partialViewName, item)
+    }
+    catch (InvalidOperationException)
+    {
+        <p>
+            <strong>Nepodarilo sa vykresliť komponent typu: @(item.Content.ContentType.Alias)</strong>
+            <br />
+            Pravdepodobne sa tak stalo preto, že čiastočné zobrazenie <em>@partialViewName</em> sa nepodarilo nájsť.
+        </p>
+    }
+}

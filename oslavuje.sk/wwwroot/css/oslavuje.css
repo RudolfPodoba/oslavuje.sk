@@ -1,0 +1,37 @@
+﻿
+/*Ochrana proti robotom.*/
+.api-password-group {
+    display: none;
+}
+
+.masked-input {
+    -webkit-text-security: disc;
+    text-security: disc;
+}
+/*Back-to-top-button*/
+.back-to-top {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    display: none;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    background-color: #1abc9c; /* Using your primary color */
+    color: white;
+    border-radius: 50%;
+    z-index: 999;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.back-to-top:hover {
+    background-color: #03203d; /* Your secondary color */
+    color: white;
+    text-decoration: none;
+}
+
+.back-to-top i {
+    font-size: 18px;
+}

@@ -1,0 +1,20 @@
+﻿@using oslavuje.sk.Controllers.Surface
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+                <div class="card-body">
+                    @using (Html.BeginUmbracoForm<MemberSurfaceController>("Odhlasenie", FormMethod.Post, new { @class = "text-left", role = "form", id = "contactForm" }))
+                    {
+                        <input asp-antiforgery="true" type="hidden" />
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })                        
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Odhlásiť</button>
+                        </div>
+                    }
+                </div>                
+            
+        </div>
+    </div>
+</div>

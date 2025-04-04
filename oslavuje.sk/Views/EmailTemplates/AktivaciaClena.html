@@ -1,0 +1,57 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>{EMAIL_SUBJ}</title>
+    <style type="text/css">
+        body {
+            font-family: Arial, Helvetica, Sans Serif;
+            color: #2C3E50;
+            font-size: 14px;
+        }
+
+        a:link, a:visited, a:active {
+            color: #2C3E50;
+            text-decoration: underline;
+        }
+
+        a:hover {
+            color: #2C3E50;
+            text-decoration: underline;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            color: #2C3E50;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        hr {
+            color: #4FFFFF;
+            background-color: #2C3E50;
+            border: 1px solid #2C3E50;
+        }
+    </style>
+</head>
+<body>
+    <div style="padding: 20px">
+        Dobrý deň {EMAIL_NAME},<br />
+        <br />
+        na základe Vašej registrácie na našich stránkach Vám posielame tento e-mail.<br />
+        Pre dokočenie registrácie je potrebné kliknúť na nasledujúci odkaz:<br />
+        <a href="{ACTIVATION_LINK}" style="color: #2C3E50">DOKONČIŤ</a><br />
+        <br />
+    </div>
+    <div style="text-align:center;">        
+        <h3>www.OSLAVUJE.sk</h3>
+    </div>
+    <div style="height: 10px; width: 100%; border-bottom: 1px solid #2C3E50; background-color: transparent">
+        &nbsp;
+    </div>
+    <div style="color: #2C3E50; padding: 10px; text-align: center; font-size: 12px ">
+        <em>
+            Tento e-mail Vám bol zaslaný na základe udeleného súhlasu na našich stránkach.
+            <br />
+            Váš e-mail: <a href="mailto://{EMAIL_TO}" style="color: #2C3E50">{EMAIL_TO}</a>
+        </em>
+    </div>
+</body>
+</html>
