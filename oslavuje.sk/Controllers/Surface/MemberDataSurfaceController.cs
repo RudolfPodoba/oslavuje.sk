@@ -71,7 +71,6 @@ public class MemberDataSurfaceController : SurfaceController
             _logger.LogError("Chyba pri validácii údajov (MemberDataSurfaceController - save)");
             TempData["ErrorMessage"] = "Zadané údaje nie sú správne vyplnené.";
             return RedirectToUmbracoPage(contentKey: _presmerovanieConfig.ClenskaSekcia.Clenska_sekcia);
-            //return CurrentUmbracoPage();
         }
 
         try
@@ -81,7 +80,6 @@ public class MemberDataSurfaceController : SurfaceController
             {
                 _logger.LogError("Chyba pri získavaní prihláseného používateľa (MemberDataSurfaceController - save)");
                 return RedirectToUmbracoPage(contentKey: _presmerovanieConfig.ClenskaSekcia.Clenska_sekcia_nedostupna);
-                //return Unauthorized();
             }
 
             var data = new MemberData
@@ -103,6 +101,5 @@ public class MemberDataSurfaceController : SurfaceController
         }
 
         return RedirectToUmbracoPage(contentKey: _presmerovanieConfig.ClenskaSekcia.Clenska_sekcia);
-        //return RedirectToCurrentUmbracoPage();
     }
 }

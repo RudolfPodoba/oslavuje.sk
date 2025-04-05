@@ -90,57 +90,7 @@ WebApplication app = builder.Build();
 }
 // HTTPS END
 
-// Pridanie middleware pre dynamické preposielanie.
-// Middleware pre subdomény - umoòuje presmerova rôzne subdomény na rôzne cesty v rámci aplikácie, prièom zachováva prístup k statickım súborom.
-//app.Use(async (context, next) =>
-//{
-//    var host = context.Request.Host.Host;
-//    var path = context.Request.Path.Value ?? string.Empty;
-//    //Log.Information("Received 1 host: {host}", host);
 
-//    // Prístup k statickım súborom zachováme
-//    if (path.StartsWith("/css/") || path.StartsWith("/js/") || path.StartsWith("/assets/") || path.StartsWith("/media/") || path.StartsWith("/scripts/"))
-//    {
-//        await next();
-//        return;
-//    }
-
-//    // Statické mapovanie subdomén (záloha ak databáza nie je dostupná/pre testovanie, èi aspoò to funguje :D, prípadne pre nejakı default...)
-//    //var subdomainMappings = new Dictionary<string, string>
-//    //{
-//    //    { "wtke.oslavuje.sk", "/Home/Kontakt" },
-//    //    { "pokus.oslavuje.sk", "/Home/about-this-page" },
-//    //};
-
-
-//    // Extrahujeme len prvú èas subdomény (pred prvou bodkou)
-//    string subdomain = host.Split('.')[0];
-
-//    // Skúsi naèíta z databázy - pouite scope pre prístup k repozitáru
-//    using (var scope = app.Services.CreateScope())
-//    {
-//        var giftRegistryRepo = scope.ServiceProvider.GetRequiredService<GiftRegistryRepository>();
-//        var registry = await giftRegistryRepo.GetRegistryBySubdomainAsync(subdomain);
-
-//        if (registry != null && registry.IsActive)
-//        {
-//            // Cesta pre zobrazenie registra darèekov
-//            context.Request.Path = "/Home/Zoznam_darcekov";
-//            context.Items["CurrentGiftRegistry"] = registry.Id;
-
-//            await next();
-//            return;
-//        }
-//    }
-
-//    // Pokraèuj so statickım mapovaním ak nebolo nájdené v databáze
-//    //if (subdomainMappings.TryGetValue(host, out var targetPath))
-//    //{
-//    //    // Zmení cestu pre zobrazenie obsahu.
-//    //    context.Request.Path = targetPath;
-//    //}
-//    await next();
-//});
 // Middleware pre subdomény - presmeruje poiadavky na hlavnú doménu s príslušnou cestou
 app.Use(async (context, next) =>
 {
@@ -169,9 +119,6 @@ app.Use(async (context, next) =>
 
             if (registry != null && registry.IsActive)
             {
-                // Presmerovanie na hlavnú doménu so správnou cestou a registryId ako query parametrom
-                //string redirectUrl = $"{scheme}://oslavuje.sk/Home/Zoznam_darcekov?registryId={registry.Id}";
-                //context.Response.Redirect(redirectUrl, permanent: false);
                 // V middleware ponecháme presmerovanie ako je teraz
                 string redirectUrl = $"{scheme}://oslavuje.sk/Home/Zoznam_darcekov?registryId={registry.Id}&subdomain={subdomain}";
                 context.Response.Redirect(redirectUrl, permanent: false);

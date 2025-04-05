@@ -66,21 +66,13 @@ public class GiftRegistrySurfaceController : SurfaceController
             {
                 TempData["ErrorMessage"] = "Zadané údaje nie sú správne vyplnené.";
                 return RedirectToUmbracoPage(contentKey: _presmerovanieConfig.ClenskaSekcia.Clenska_sekcia);
-                //return CurrentUmbracoPage();
             }
-
-            //if (!new ApiKeyValidator().IsValid(model.MojeHeslo ?? string.Empty, model.PotvrdMojeHeslo ?? string.Empty))
-            //{
-            //    ModelState.AddModelError("", "Musíte označiť, že nie ste robot.");
-            //    return CurrentUmbracoPage();
-            //}
-
+            
             // Check if user is authenticated
             var member = await _memberManager.GetUserAsync(User);
             if (member == null)
             {
                 ModelState.AddModelError("", "Pre vytvorenie registra darčekov musíte byť prihlásený.");
-                //return CurrentUmbracoPage();
                 return RedirectToUmbracoPage(contentKey: _presmerovanieConfig.ClenskaSekcia.Clenska_sekcia_nedostupna);
             }
 
@@ -109,7 +101,6 @@ public class GiftRegistrySurfaceController : SurfaceController
                 ModelState.AddModelError("", "Nastala chyba pri vytváraní registra darčekov.");
                 TempData["ErrorMessage"] = "Nastala chyba pri vytváraní registra darčekov.";
                 return RedirectToUmbracoPage(contentKey: _presmerovanieConfig.ClenskaSekcia.Clenska_sekcia);
-                //return CurrentUmbracoPage();
             }
 
             // Add gifts - už je to dvojkrokové, takže toto je len príklad, ako by to mohlo vyzerať
@@ -130,7 +121,6 @@ public class GiftRegistrySurfaceController : SurfaceController
             }
 
             TempData["SuccessMessage"] = "Register darčekov bol úspešne vytvorený.";
-            //return RedirectToUmbracoPage(contentKey: _presmerovanieConfig.ClenskaSekcia.Clenska_sekcia);
             return RedirectToCurrentUmbracoPage();
         }
         catch (Exception ex)
@@ -138,11 +128,9 @@ public class GiftRegistrySurfaceController : SurfaceController
             _logger.LogError(ex, "Chyba pri vytváraní registra darčekov");
             ModelState.AddModelError("", "Nastala neočakávaná chyba pri vytváraní registra darčekov.");
             return RedirectToUmbracoPage(contentKey: _presmerovanieConfig.ClenskaSekcia.Clenska_sekcia);
-            //return CurrentUmbracoPage();
         }
     }
 
-    // In oslavuje.sk/Controllers/Surface/GiftRegistrySurfaceController.cs
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> ReserveGift(GiftReservationViewModel model)
@@ -159,25 +147,11 @@ public class GiftRegistrySurfaceController : SurfaceController
 
             if (!ModelState.IsValid)
             {
-                //foreach (var modelState in ModelState.Values)
-                //{
-                //    foreach (var error in modelState.Errors)
-                //    {
-                //        _logger.LogError($"Validation error: {error.ErrorMessage}");
-                //    }
-                //}
-
                 TempData["ErrorMessage"] = "Zadané údaje nie sú správne vyplnené.";
                 return RedirectToUmbracoPage(
                     contentKey: _presmerovanieConfig.ClenskaSekcia.Zoznam_darcekov,
                     queryString: new QueryString($"?registryId={model.RegistryId}")
                 );
-
-                //return RedirectToUmbracoPage(_presmerovanieConfig.ClenskaSekcia.Zoznam_darcekov, new { registryId = model.RegistryId });
-                //return RedirectToUmbracoPage(
-                //    contentKey: _presmerovanieConfig.ClenskaSekcia.Zoznam_darcekov,
-                //    routeValues: new { registryId = model.RegistryId }
-                //    );
             }
 
             // Ochrana proti robotom.
@@ -291,7 +265,6 @@ public class GiftRegistrySurfaceController : SurfaceController
         }
     }
 
-    // Add these methods to GiftRegistrySurfaceController
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdateGiftRegistry(GiftRegistryViewModel model)
@@ -328,7 +301,6 @@ public class GiftRegistrySurfaceController : SurfaceController
                 return RedirectToUmbracoPage(contentKey: _presmerovanieConfig.ClenskaSekcia.Clenska_sekcia);
             }
 
-            // Update registry (you need to add UpdateRegistryAsync method to repository)
             existingRegistry.Title = model.Title;
             existingRegistry.Description = model.Description;
             existingRegistry.ExpiryDate = model.ExpiryDate;
